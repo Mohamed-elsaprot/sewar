@@ -19,7 +19,11 @@ class SettingButton extends StatelessWidget {
               alignment: AlignmentDirectional.centerEnd,
               child: Icon(icon,color: Styles.primary,size: 31.sp,)),
           SizedBox(width: 22.w,),
-          Styles.text(title,size: 25,textAlign: TextAlign.center),
+          Flexible(child: Padding(
+            padding: EdgeInsetsDirectional.only(end: 40.w),
+            child: FittedBox(child: Styles.text(title,size: 25,textAlign: TextAlign.center)),
+          )),
+          // Flexible(child: Styles.text(title,size: 25,textAlign: TextAlign.center)),
         ],
       ),
       rad: 60.r,backGroundColor: Styles.grey,

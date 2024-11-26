@@ -10,6 +10,7 @@ import 'package:alsewar/features/splash/manager/user_info_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/local_storage/secure_storage.dart';
 import '../../../core/router.dart';
@@ -58,15 +59,17 @@ class AuthBody extends StatelessWidget {
                       AppRouter.router.pushReplacement(AppRouter.navScreen);
                 }
               }),
-
-              // SizedBox(height: 80.h,),
-              // CustomButton(
-              //     fun: (){
-              //     }, title: 'تسجيل',
-              //     padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 55.w),rad: 60.r,textSize: 17,
-              //     backGroundColor: Styles.whiteColor,textColor: Styles.blackColor,
-              //     borderSide: const BorderSide(color: Styles.primary,width: 2),
-              // ),
+              SizedBox(height: 60.h,),
+              CustomButton(
+                  fun: () async {
+                    if (await canLaunchUrl(Uri.parse('https://forly.io/d/194515'))) {
+                      AppRouter.router.push(AppRouter.signUpWebView);
+                    }
+                  }, title: 'تسجيل',
+                  padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 55.w),rad: 60.r,textSize: 17,
+                  backGroundColor: Styles.whiteColor,textColor: Styles.blackColor,
+                  borderSide: const BorderSide(color: Styles.primary,width: 2),
+              ),
               SizedBox(height: 40.h,),
             ],
           ),

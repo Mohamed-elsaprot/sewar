@@ -4,13 +4,13 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 class AuthRepo {
-  Future <Either<Failure,String>> auth ({required String phone, required String password})async{
+  Future <Either<Failure,Map>> auth ({required String phone, required String password})async{
     try{
       var res = await ApiService.postData(endPoint: ApiService.auth, postedData: {
         'phone_number':phone,
         'password':password,
       });
-      return right(res['data']['access_token']);
+      return right(res['data']);
     }catch(e){
       if(e is DioException){
         return left(ServerFailure.fromDioError(e));

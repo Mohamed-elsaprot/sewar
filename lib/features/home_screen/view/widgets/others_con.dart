@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:alsewar/core/widgets/circle_name.dart';
+import 'package:alsewar/features/auth/manager/auth_cubit.dart';
 import 'package:alsewar/features/chat/manager/add_to_archive_cubit.dart';
 import 'package:alsewar/features/home_screen/view/widgets/shimmer_chatsList.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -53,44 +54,22 @@ class _OthersConState extends State<OthersCon> {
                 padding: EdgeInsetsDirectional.only(top: 30.h,end: 15.w,start: 15.w,bottom: 150.h),
                 itemBuilder: (context,index)=>ListTile(
                   onTap: (){
-                    showCupertinoModalBottomSheet(context: context,topRadius: const Radius.circular(40) ,builder: (_)=>
-                    MultiBlocProvider(providers: [
-                      BlocProvider(create: (context)=>
-                      ChatBodyCubit(ChatBodyRepo(), guestName: myChatsCubit.othersConList[index].guestName??'', userName: userInfoCubit.user.name??'')
-                        ..getChatBody(chatId: myChatsCubit.othersConList[index].id.toString()),
-                      ),
-                      BlocProvider(create: (context)=> AddToArchiveCubit(ChatBodyRepo(),myChatsCubit.othersConList[index].id!))
-                    ], child: const Chat(isOther: true,))
-                    );
+                    if(BlocProvider.of<AuthCubit>(context).isAdmin){
+                      showCupertinoModalBottomSheet(context: context,topRadius: const Radius.circular(40) ,builder: (_)=>
+                          MultiBlocProvider(providers: [
+                            BlocProvider(create: (context)=>
+                            ChatBodyCubit(ChatBodyRepo(), guestName: myChatsCubit.othersConList[index].guestName??'', userName: userInfoCubit.user.name??'')
+                              ..getChatBody(chatId: myChatsCubit.othersConList[index].id.toString()),
+                            ),
+                            BlocProvider(create: (context)=> AddToArchiveCubit(ChatBodyRepo(),myChatsCubit.othersConList[index].id!))
+                          ], child: const Chat(isOther: true,))
+                      );
+                    }
                   },
                   leading: CircleName(name: myChatsCubit.othersConList[index].guestName??' '),
                   title: Styles.text(myChatsCubit.othersConList[index].guestName??''),
                   subtitle: SizedBox(width: 200.w,child: Styles.subTitle(myChatsCubit.othersConList[index].userName??'',color: Styles.primary,maxLine: 1,overflow: TextOverflow.ellipsis)),
                   trailing: Styles.subTitle(DateFormat.Hm().format(DateTime.tryParse(myChatsCubit.othersConList[index].conversationLastMessage?.createdAt!??'')??DateTime(2024,1,1,0,0)),size: 13),
-                  // trailing: SizedBox(
-                  //   width: 90.w,
-                  //   child: Column(
-                  //     children: [
-                  //       GestureDetector(
-                  //         onTap: (){
-                  //           showCupertinoModalBottomSheet(context: context,topRadius: const Radius.circular(40) ,
-                  //               builder: (_)=> BlocProvider(create: (context)=> OnlineUsersCubit(OnlineUsersRepo()),child: ForwardChat(
-                  //                 chatId: myChatsCubit.othersConList[index].id??0,
-                  //               ),));                          },
-                  //         child: Container(
-                  //           decoration: BoxDecoration(
-                  //               borderRadius: BorderRadius.circular(40.r),
-                  //               color: Styles.grey
-                  //           ),
-                  //           padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 4.h),
-                  //           child: Styles.text('تحويل المحادثة',size: 10),
-                  //         ),
-                  //       ),
-                  //       SizedBox(height: 12.h,),
-                  //       Styles.subTitle(DateFormat.Hm().format(DateTime.tryParse(myChatsCubit.othersConList[index].conversationLastMessage?.createdAt!??'')??DateTime(2024,1,1,0,0)),size: 13)
-                  //     ],
-                  //   ),
-                  // ),
                 ),
                 separatorBuilder: (context,index)=>SizedBox(height: 35.h,),
                 itemCount: myChatsCubit.othersConList.length
